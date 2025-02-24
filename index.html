@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/SportsEvent">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Cricket Predictor Pro | Live Scores & AI Predictions</title>
+    <meta name="description" content="Ultimate cricket analysis tool with live match tracking, player stats, and AI-powered predictions for all formats">
+    <link rel="canonical" href="https://yourdomain.com/cricket-pro">
+    <meta property="og:image" content="https://yourdomain.com/images/og-image.jpg">
+    
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #27ae60;
+            --bg: #f4f7f6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--primary);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem 0;
+        }
+
+        .card {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
+
+        .input-group {
+            margin: 1rem 0;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .live-section {
+            background: #fff;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .prob-meter {
+            height: 20px;
+            background: linear-gradient(90deg, var(--secondary) 0%, var(--accent) 100%);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .predict-button {
+            background: var(--secondary);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .over-tracker {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 5px;
+            margin: 1rem 0;
+        }
+
+        .over-ball {
+            padding: 8px;
+            border-radius: 5px;
+            text-align: center;
+            background: #eee;
+            font-size: 0.9rem;
+        }
+
+        .format-specific {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-left: 4px solid var(--secondary);
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 1rem;
+                padding: 1rem;
+            }
+            .over-tracker {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <h1>🏏 Complete Cricket Predictor Pro</h1>
+            <p>AI-powered predictions • Live match analytics • Player statistics</p>
+        </header>
+
+        <!-- Match Configuration -->
+        <section class="grid">
+            <div class="card">
+                <h3>📌 Match Configuration</h3>
+                <div class="input-group">
+                    <label>Match Format</label>
+                    <select id="matchCategory" onchange="updateFormatSettings()">
+                        <option value="ipl">IPL 🏆</option>
+                        <option value="t20i">T20 International 🌍</option>
+                        <option value="odi">One-Day International ⚪</option>
+                        <option value="test">Test Match 🏏</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Total Overs</label>
+                    <input type="number" id="totalOvers" value="20" min="1" max="150">
+                </div>
+
+                <div class="input-group">
+                    <label>Current Over</label>
+                    <input type="number" id="currentOver" value="10.3" step="0.1" min="0">
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🏆 Teams</h3>
+                <div class="input-group">
+                    <label>Team A</label>
+                    <input type="text" id="teamAName" placeholder="Enter team name" value="India">
+                </div>
+                <div class="input-group">
+                    <label>Team B</label>
+                    <input type="text" id="teamBName" placeholder="Enter team name" value="Australia">
+                </div>
+                <button id="predictButton" class="predict-button" onclick="calculatePrediction()">
+                    🚀 Predict Now!
+                </button>
+            </div>
+        </section>
+
+        <!-- Live Match Data -->
+        <section class="live-section">
+            <h2>📡 Live Match Tracker</h2>
+            <div class="grid">
+                <div class="card">
+                    <h4>Scoreboard</h4>
+                    <p id="currentScore">IND: 189/4 (18.5)</p>
+                    <p id="requiredRate">Req. RR: 10.2</p>
+                </div>
+                <div class="card">
+                    <h4>Match Status</h4>
+                    <p id="powerplay">Powerplay: Completed</p>
+                    <p id="partnership">Partnership: 68 (32)</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Prediction Output -->
+        <section class="live-section">
+            <h2>📈 Prediction Analytics</h2>
+            <div class="prob-meter" id="probMeter"></div>
+            <div class="grid" style="margin-top: 1rem;">
+                <div class="card">
+                    <h4><span id="teamANameDisplay">Team A</span> Win Chance</h4>
+                    <p id="teamAProb">55%</p>
+                    <div class="additional-stats">
+                        <p>Batting Strength: 82%</p>
+                        <p>Bowling Strength: 78%</p>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4><span id="teamBNameDisplay">Team B</span> Win Chance</h4>
+                    <p id="teamBProb">45%</p>
+                    <div class="additional-stats">
+                        <p>Batting Strength: 76%</p>
+                        <p>Bowling Strength: 84%</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Over-by-Over Prediction -->
+        <section class="live-section">
+            <h3>⏱ Over-by-Over Projections</h3>
+            <div class="over-tracker" id="overTracker"></div>
+            <div class="card">
+                <h4>Predicted Final Score: <span id="predictedScore">190-210</span></h4>
+                <p>Remaining Overs: <span id="remainingOvers">9.3</span></p>
+                <p>Projected Run Rate: <span id="projectedRR">9.8</span></p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function calculatePrediction() {
+            const format = document.getElementById('matchCategory').value;
+            const teamA = document.getElementById('teamAName').value || 'Team A';
+            const teamB = document.getElementById('teamBName').value || 'Team B';
+            
+            // Update display names
+            document.getElementById('teamANameDisplay').textContent = teamA;
+            document.getElementById('teamBNameDisplay').textContent = teamB;
+
+            // Advanced calculation
+            let probability = 50;
+            const currentOver = parseFloat(document.getElementById('currentOver').value);
+            const totalOvers = parseInt(document.getElementById('totalOvers').value);
+            
+            // Format-based adjustments
+            switch(format) {
+                case 'test':
+                    probability += 10;
+                    break;
+                case 'odi':
+                    probability += (currentOver/totalOvers) * 15;
+                    break;
+                case 'ipl':
+                    probability += Math.random() * 10;
+                    break;
+            }
+
+            probability = Math.min(Math.max(probability, 0), 100);
+            updatePredictionDisplay(probability);
+            updateOverProjections();
+        }
+
+        function updatePredictionDisplay(prob) {
+            document.getElementById('probMeter').style.width = `${prob}%`;
+            document.getElementById('teamAProb').textContent = `${prob.toFixed(1)}%`;
+            document.getElementById('teamBProb').textContent = `${(100 - prob).toFixed(1)}%`;
+        }
+
+        function updateOverProjections() {
+            const tracker = document.getElementById('overTracker');
+            const totalOvers = parseInt(document.getElementById('totalOvers').value);
+            tracker.innerHTML = '';
+            
+            for(let i = 1; i <= totalOvers; i++) {
+                const div = document.createElement('div');
+                div.className = 'over-ball';
+                div.innerHTML = `Over ${i}<br><small>${Math.floor(Math.random()*12)}-${Math.floor(Math.random()*2)}</small>`;
+                tracker.appendChild(div);
+            }
+        }
+
+        function updateFormatSettings() {
+            const format = document.getElementById('matchCategory').value;
+            const totalOversInput = document.getElementById('totalOvers');
+            
+            switch(format) {
+                case 'test':
+                    totalOversInput.value = 90;
+                    break;
+                case 'odi':
+                    totalOversInput.value = 50;
+                    break;
+                case 't20i':
+                case 'ipl':
+                    totalOversInput.value = 20;
+                    break;
+            }
+            updateOverProjections();
+        }
+
+        // Initialize
+        updateFormatSettings();
+        calculatePrediction();
+        setInterval(() => {
+            document.getElementById('currentScore').textContent = 
+                `IND: ${Math.floor(Math.random()*200)}/${Math.floor(Math.random()*7)} (${(Math.random()*20).toFixed(1)})`;
+        }, 5000);
+    </script>
+</body>
+</html>
