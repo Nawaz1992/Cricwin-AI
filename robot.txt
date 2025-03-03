@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://nawaz1992.github.io/Cricwin-AI//sitemap.xml
